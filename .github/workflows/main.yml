@@ -1,0 +1,34 @@
+name: CI
+on: push
+
+env:
+  AZURE_RESOURCE_GROUP: GHA-ARM-Resources
+  AZURE_TEMPLATE_FILE: azuredeploy.json
+  AZURE_TEMPLATE_PARAM_FILE: azuredeploy.parameters.json
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    # Checkout the repo
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Login to Azure
+    - name: Azure Login
+      uses: Azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Deploy or update the arm template
+    - name: Azure CLI script to deploy ARM template
+      uses: azure/CLI@v1
+      with:
+        azcliversion: latest
+        inlineScript: |
+          az account show
+          az group deployment create \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP}} \
+            --template-file ${{ env.AZURE_TEMPLATE_FILE}} \
+            --parameters ${{ env.AZURE_TEMPLATE_PARAM_FILE}}
