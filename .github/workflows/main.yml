@@ -1,11 +1,15 @@
+# Name of the workflow
 name: CI
+# Trigger action
 on: push
 
+# Define Azure the environment
 env:
   AZURE_RESOURCE_GROUP: GHA-ARM-Resources
   AZURE_TEMPLATE_FILE: azuredeploy.json
   AZURE_TEMPLATE_PARAM_FILE: azuredeploy.parameters.json
 
+# Run the jobs
 jobs:
   build:
     runs-on: ubuntu-latest
